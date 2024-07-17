@@ -1,10 +1,10 @@
 {
-    "name": "amyboyd/pgn-parser",
+    "name": "fabiandev004/pgn-parser",
     "description": "A PHP parser for the chess game notation format, PGN. There are no external dependencies. It's simple to use, namespaced and testable.",
     "authors": [
         {
-            "name": "Amy Boyd",
-            "email": "amy@amyboyd.co.uk"
+            "name": "Fabian Dev ",
+            "email": "fabiandev004@gmail.com"
         }
     ],
     "autoload": {
