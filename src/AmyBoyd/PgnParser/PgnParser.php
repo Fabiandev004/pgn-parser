@@ -79,6 +79,7 @@ class PgnParser
     while (($line = fgets($handle, 4096)) !== false) {
       // When reading files line-by-line, there is a \n at the end, so remove it.
       $line = trim($line);
+      $line = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $line); //remove \ufeff for UTF-8 decleration....
       if (empty($line)) {
         continue;
       }
@@ -111,20 +112,20 @@ class PgnParser
 
   private function removeAnnotations($line)
   {
-    $result = null;
+//    $result = null;
     foreach (str_split($line) as $char) {
       if ($char === '{' || $char === '(') {
         $this->multiLineAnnotationDepth++;
       }
       if ($this->multiLineAnnotationDepth === 0) {
-        $result .= $char;
+//        $result .= $char;
       }
       if ($char === '}' || $char === ')') {
         $this->multiLineAnnotationDepth--;
       }
     }
 
-    return $result;
+    return $line;
   }
 
   /**
@@ -191,17 +192,17 @@ class PgnParser
     $line = $this->removeAnnotations($line);
 
     // Remove the move numbers, so "1. e4 e5 2. f4" becomes "e4 e5 f4"
-    $line = preg_replace('/\d+\./', '', $line);
+    //    $line = preg_replace('/\d+\./', '', $line); remove line for rav pgn interpretation
 
     // Remove the result (1-0, 1/2-1/2, 0-1) from the end of the line, if there is one.
     $line = preg_replace('/(1-0|0-1|1\/2-1\/2|\*)$/', '', $line);
 
     // If black's move is after an annotation, it is formatted as: "annotation } 17...h5".
     // Remove those dots (one is already gonee after removing "17." earlier.
-    $line = str_replace('..', '', $line);
+//    $line = str_replace('..', '', $line);
 
-    $line = preg_replace('/\$[0-9]+/', '', $line);
-    $line = preg_replace('/\([^\(\)]+\)/', '', $line);
+//    $line = preg_replace('/\$[0-9]+/', '', $line);
+//    $line = preg_replace('/\([^\(\)]+\)/', '', $line);
 
     // And finally remove excess white-space.
     $line = trim(preg_replace('/\s{2,}/', ' ', $line));
